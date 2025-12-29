@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Événements de Souris</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            color: white;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hover-box {
+            width: 300px;
+            height: 300px;
+            background: #3498db;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin: 0 auto 30px;
+        }
+
+        .info {
+            color: white;
+            font-size: 1.1em;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .status {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖱️ Événements de Souris</h1>
+        
+        <div class="hover-box" id="hoverBox">
+            Passez la souris ici !
+        </div>
+
+        <div class="info">
+            <p>Passez votre souris sur la boîte pour voir le changement de couleur</p>
+            <p class="status" id="status">État : En attente...</p>
+        </div>
+    </div>
+
+    <script>
+        const box = document.getElementById('hoverBox');
+        const status = document.getElementById('status');
+
+        // Couleur d'origine
+        const originalColor = '#3498db';
+        
+        // Couleur au survol
+        const hoverColor = '#e74c3c';
+
+        // Événement mouseenter (quand la souris entre dans la div)
+        box.addEventListener('mouseenter', function() {
+            box.style.backgroundColor = hoverColor;
+            box.style.transform = 'scale(1.05)';
+            box.textContent = ' Couleur changée !';
+            status.textContent = 'État : Souris sur la boîte';
+        });
+
+        // Événement mouseleave (quand la souris quitte la div)
+        box.addEventListener('mouseleave', function() {
+            box.style.backgroundColor = originalColor;
+            box.style.transform = 'scale(1)';
+            box.textContent = 'Passez la souris ici !';
+            status.textContent = 'État : Souris hors de la boîte';
+        });
+
+        // Bonus : événement mousedown (clic)
+        box.addEventListener('mousedown', function() {
+            box.style.transform = 'scale(0.95)';
+        });
+
+        // Bonus : événement mouseup (relâchement du clic)
+        box.addEventListener('mouseup', function() {
+            box.style.transform = 'scale(1.05)';
+        });
+    </script>
+</body>
+</html>
