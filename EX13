@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Barre de progression animée</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+
+    .progress-container {
+      width: 300px;
+      height: 25px;
+      background-color: #ddd;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 15px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #27ae60;
+      transition: width 0.2s;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #percent {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Barre de progression</h2>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <button onclick="demarrer()">Démarrer</button>
+
+  <div id="percent">0%</div>
+
+  <script>
+    let progression = 0;
+    let interval;
+
+    function demarrer() {
+      // Réinitialisation
+      progression = 0;
+      document.getElementById("progressBar").style.width = "0%";
+      document.getElementById("percent").textContent = "0%";
+
+      // Animation
+      interval = setInterval(() => {
+        if (progression >= 100) {
+          clearInterval(interval);
+        } else {
+          progression++;
+          document.getElementById("progressBar").style.width = progression + "%";
+          document.getElementById("percent").textContent = progression + "%";
+        }
+      }, 50); // vitesse de remplissage
+    }
+  </script>
+
+</body>
+</html>
