@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtrage de Produits</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .search-section {
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 15px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .search-box:focus-within {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-icon {
+            font-size: 1.5em;
+            color: #667eea;
+        }
+
+        #searchInput {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 1.1em;
+            outline: none;
+            color: #333;
+        }
+
+        #searchInput::placeholder {
+            color: #999;
+        }
+
+        .filter-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 10px;
+        }
+
+        .stats-text {
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        .clear-btn {
+            padding: 8px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .clear-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .product-card {
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .product-card.hidden {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .product-icon {
+            font-size: 3em;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .product-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .product-category {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #e3f2fd;
+            color: #1976d2;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .product-description {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .product-price {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            display: none;
+        }
+
+        .no-results.show {
+            display: block;
+        }
+
+        .no-results-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .no-results-text {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛍️ Catalogue de Produits</h1>
+        <p class="subtitle">Recherchez parmi notre sélection de produits</p>
+
+        <div class="search-section">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Rechercher un produit, catégorie ou description..."
+                    oninput="filterProducts()"
+                >
+            </div>
+        </div>
+
+        <div class="filter-stats">
+            <span class="stats-text" id="statsText">12 produits affichés</span>
+            <button class="clear-btn" onclick="clearSearch()">Réinitialiser</button>
+        </div>
+
+        <div class="products-grid" id="productsGrid"></div>
+
+        <div class="no-results" id="noResults">
+            <div class="no-results-icon">🔍</div>
+            <div class="no-results-text">Aucun produit trouvé</div>
+            <p>Essayez une autre recherche</p>
+        </div>
+    </div>
+
+    <script>
+        // Base de données des produits
+        const products = [
+            {
+                id: 1,
+                icon: '💻',
+                name: 'MacBook Pro',
+                category: 'Électronique',
+                description: 'Ordinateur portable haute performance avec puce M3',
+                price: '2499€'
+            },
+            {
+                id: 2,
+                icon: '📱',
+                name: 'iPhone 15 Pro',
+                category: 'Électronique',
+                description: 'Smartphone dernière génération avec caméra avancée',
+                price: '1299€'
+            },
+            {
+                id: 3,
+                icon: '🎧',
+                name: 'AirPods Pro',
+                category: 'Audio',
+                description: 'Écouteurs sans fil avec réduction de bruit active',
+                price: '279€'
+            },
+            {
+                id: 4,
+                icon: '⌚',
+                name: 'Apple Watch Series 9',
+                category: 'Accessoires',
+                description: 'Montre connectée avec suivi santé complet',
+                price: '449€'
+            },
+            {
+                id: 5,
+                icon: '📷',
+                name: 'Canon EOS R6',
+                category: 'Photo',
+                description: 'Appareil photo mirrorless professionnel 20MP',
+                price: '2899€'
+            },
+            {
+                id: 6,
+                icon: '🎮',
+                name: 'PlayStation 5',
+                category: 'Gaming',
+                description: 'Console de jeu nouvelle génération avec SSD ultra-rapide',
+                price: '549€'
+            },
+            {
+                id: 7,
+                icon: '⌨️',
+                name: 'Clavier Mécanique',
+                category: 'Accessoires',
+                description: 'Clavier gaming RGB avec switches Cherry MX',
+                price: '159€'
+            },
+            {
+                id: 8,
+                icon: '🖱️',
+                name: 'Souris Logitech MX',
+                category: 'Accessoires',
+                description: 'Souris ergonomique sans fil pour professionnels',
+                price: '99€'
+            },
+            {
+                id: 9,
+                icon: '🖥️',
+                name: 'Écran 4K Dell',
+                category: 'Électronique',
+                description: 'Moniteur 27 pouces 4K HDR pour créateurs',
+                price: '699€'
+            },
+            {
+                id: 10,
+                icon: '🔊',
+                name: 'Enceinte Sonos',
+                category: 'Audio',
+                description: 'Enceinte intelligente avec son premium',
+                price: '229€'
+            },
+            {
+                id: 11,
+                icon: '📚',
+                name: 'Kindle Paperwhite',
+                category: 'Lecture',
+                description: 'Liseuse numérique avec écran antireflet',
+                price: '149€'
+            },
+            {
+                id: 12,
+                icon: '🎥',
+                name: 'GoPro Hero 12',
+                category: 'Photo',
+                description: 'Caméra d\'action 5.3K étanche et stabilisée',
+                price: '399€'
+            }
+        ];
+
+        // Afficher les produits au chargement
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = products.map(product => `
+                <div class="product-card" data-id="${product.id}">
+                    <div class="product-icon">${product.icon}</div>
+                    <div class="product-name">${product.name}</div>
+                    <span class="product-category">${product.category}</span>
+                    <p class="product-description">${product.description}</p>
+                    <div class="product-price">${product.price}</div>
+                </div>
+            `).join('');
+        }
+
+        // Filtrer les produits en fonction de la recherche
+        function filterProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const productCards = document.querySelectorAll('.product-card');
+            const noResults = document.getElementById('noResults');
+            let visibleCount = 0;
+
+            productCards.forEach(card => {
+                const productId = parseInt(card.dataset.id);
+                const product = products.find(p => p.id === productId);
+                
+                const searchableText = `
+                    ${product.name} 
+                    ${product.category} 
+                    ${product.description}
+                `.toLowerCase();
+
+                if (searchableText.includes(searchTerm)) {
+                    card.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            // Mettre à jour les statistiques
+            updateStats(visibleCount);
+
+            // Afficher le message "aucun résultat"
+            if (visibleCount === 0) {
+                noResults.classList.add('show');
+            } else {
+                noResults.classList.remove('show');
+            }
+        }
+
+        // Mettre à jour les statistiques
+        function updateStats(count) {
+            const statsText = document.getElementById('statsText');
+            statsText.textContent = `${count} produit${count > 1 ? 's' : ''} affiché${count > 1 ? 's' : ''}`;
+        }
+
+        // Réinitialiser la recherche
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            filterProducts();
+        }
+
+        // Initialisation
+        renderProducts();
+        updateStats(products.length);
+    </script>
+</body>
+</html>
