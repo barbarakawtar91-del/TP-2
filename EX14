@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Drag and Drop</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .zone {
+      width: 250px;
+      min-height: 200px;
+      border: 2px dashed #555;
+      padding: 10px;
+    }
+
+    .zone h3 {
+      text-align: center;
+    }
+
+    .item {
+      padding: 10px;
+      margin: 10px 0;
+      background-color: #3498db;
+      color: white;
+      cursor: grab;
+      text-align: center;
+    }
+
+    .zone.over {
+      background-color: #ecf0f1;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Zone source -->
+  <div class="zone" id="zone1">
+    <h3>Zone 1</h3>
+    <div class="item" draggable="true" id="item1">Élément 1</div>
+    <div class="item" draggable="true" id="item2">Élément 2</div>
+  </div>
+
+  <!-- Zone destination -->
+  <div class="zone" id="zone2">
+    <h3>Zone 2</h3>
+  </div>
+
+  <script>
+    let elementEnCours = null;
+
+    // Rendre les éléments déplaçables
+    document.querySelectorAll(".item").forEach(item => {
+      item.addEventListener("dragstart", () => {
+        elementEnCours = item;
+      });
+    });
+
+    // Zones de dépôt
+    document.querySelectorAll(".zone").forEach(zone => {
+
+      zone.addEventListener("dragover", (e) => {
+        e.preventDefault(); // autoriser le drop
+        zone.classList.add("over");
+      });
+
+      zone.addEventListener("dragleave", () => {
+        zone.classList.remove("over");
+      });
+
+      zone.addEventListener("drop", () => {
+        zone.classList.remove("over");
+        if (elementEnCours) {
+          zone.appendChild(elementEnCours);
+          elementEnCours = null;
+        }
+      });
+
+    });
+  </script>
+
+</body>
+</html>
