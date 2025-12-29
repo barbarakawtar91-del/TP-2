@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Responsive avec JavaScript</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav a {
+      color: white;
+      margin-right: 15px;
+      text-decoration: none;
+    }
+
+    #menu-mobile {
+      display: none;
+      font-size: 20px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    #message {
+      text-align: center;
+      padding: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h2>Mon Site</h2>
+
+    <!-- Menu desktop -->
+    <nav id="menu-desktop">
+      <a href="#">Accueil</a>
+      <a href="#">Services</a>
+      <a href="#">Contact</a>
+    </nav>
+
+    <!-- Bouton menu mobile -->
+    <button id="menu-mobile">☰</button>
+  </header>
+
+  <div id="message"></div>
+
+  <script>
+    const menuDesktop = document.getElementById("menu-desktop");
+    const menuMobile = document.getElementById("menu-mobile");
+    const message = document.getElementById("message");
+
+    function adapterLayout() {
+      if (window.innerWidth < 768) {
+        // Mode mobile
+        menuDesktop.style.display = "none";
+        menuMobile.style.display = "block";
+        message.textContent = "📱 Mode Mobile";
+      } else {
+        // Mode desktop
+        menuDesktop.style.display = "block";
+        menuMobile.style.display = "none";
+        message.textContent = "💻 Mode Desktop";
+      }
+    }
+
+    // Exécution au chargement
+    adapterLayout();
+
+    // Écoute du redimensionnement
+    window.addEventListener("resize", adapterLayout);
+  </script>
+
+</body>
+</html>
