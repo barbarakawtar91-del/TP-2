@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Afficher / Masquer</title>
+    <style>
+        #texte {
+            margin-top: 15px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="btn" onclick="toggleTexte()">Masquer</button>
+
+    <p id="texte">
+        Ceci est un paragraphe de texte que l’on peut afficher ou masquer.
+    </p>
+
+    <script>
+        function toggleTexte() {
+            const texte = document.getElementById("texte");
+            const bouton = document.getElementById("btn");
+
+            if (texte.style.display === "none") {
+                texte.style.display = "block";
+                bouton.textContent = "Masquer";
+            } else {
+                texte.style.display = "none";
+                bouton.textContent = "Afficher";
+            }
+        }
+    </script>
+
+</body>
+</html>
