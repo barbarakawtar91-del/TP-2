@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Thème clair / sombre</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 40px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Thème clair (par défaut) */
+    body.light {
+      background-color: #f5f5f5;
+      color: #222;
+    }
+
+    /* Thème sombre */
+    body.dark {
+      background-color: #1e1e1e;
+      color: #f5f5f5;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .box {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 8px;
+      background-color: rgba(0,0,0,0.05);
+    }
+
+    body.dark .box {
+      background-color: rgba(255,255,255,0.1);
+    }
+  </style>
+</head>
+
+<body class="light">
+
+  <h1>Thème clair / sombre</h1>
+  <button id="toggleTheme">🌙 Mode sombre</button>
+
+  <div class="box">
+    Ceci est un contenu de la page.
+  </div>
+
+  <script>
+    const bouton = document.getElementById("toggleTheme");
+    const body = document.body;
+
+    // Charger le thème sauvegardé
+    const themeSauvegarde = localStorage.getItem("theme");
+    if (themeSauvegarde) {
+      body.className = themeSauvegarde;
+      bouton.textContent =
+        themeSauvegarde === "dark" ? "☀️ Mode clair" : "🌙 Mode sombre";
+    }
+
+    // Changement de thème
+    bouton.addEventListener("click", () => {
+      if (body.classList.contains("light")) {
+        body.classList.replace("light", "dark");
+        localStorage.setItem("theme", "dark");
+        bouton.textContent = "☀️ Mode clair";
+      } else {
+        body.classList.replace("dark", "light");
+        localStorage.setItem("theme", "light");
+        bouton.textContent = "🌙 Mode sombre";
+      }
+    });
+  </script>
+
+</body>
+</html>
