@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Changer couleur au clic</title>
+    <style>
+        #box {
+            width: 200px;
+            height: 200px;
+            background-color: lightblue;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="box"></div>
+
+    <button onclick="changerCouleur()">Changer la couleur</button>
+
+    <script>
+        function changerCouleur() {
+            document.getElementById("box").style.backgroundColor = "orange";
+        }
+    </script>
+
+</body>
+</html>
